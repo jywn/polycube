@@ -1,4 +1,4 @@
-package com.address.search.dto.response;
+package com.pay.polycube;
 
 import lombok.Getter;
 

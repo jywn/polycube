@@ -1,6 +1,7 @@
 package com.pay.polycube.service;
 
 import com.pay.polycube.domain.Grade;
+import com.pay.polycube.domain.Member;
 import com.pay.polycube.domain.Order;
 import com.pay.polycube.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderCommandService {
 
-    private final DiscountPolicy discountPolicy;
     private final OrderRepository orderRepository;
+    private final DiscountPolicy discountPolicy;
 
-    private void pay(Order order, Grade grade, PaymentMethod paymentMethod) {
+    public void process(Member member, PaymentMethod paymentMethod, String productName, int originalPrice) {
 
-        discountPolicy.discount(grade, order.getOriginalPrice());
+        // 1. create basic order
+        Order order = Order.create(member, productName, originalPrice);
+
+        // 2. apply discount
+        order.discount(discountPolicy);
+
+        // 3. pay
+        order.pay(paymentMethod);
+
         orderRepository.save(order);
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.pay.polycube.domain;
 
+import com.pay.polycube.service.DiscountPolicy;
 import com.pay.polycube.service.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -39,22 +40,26 @@ public class Order {
     private int finalPrice;
 
     @Builder
-    private Order(Member member, PaymentMethod paymentMethod, String productName, int originalPrice, int finalPrice) {
+    private Order(Member member, String productName, int originalPrice) {
         this.member = member;
-        this.paymentMethod = paymentMethod;
-        this.paidAt = LocalDateTime.now();
         this.productName = productName;
         this.originalPrice = originalPrice;
-        this.finalPrice = finalPrice;
     }
 
-    public static Order create(Member member, PaymentMethod paymentMethod, String productName, int originalPrice, int finalPrice) {
+    public static Order create(Member member, String productName, int originalPrice) {
         return Order.builder()
                 .member(member)
-                .paymentMethod(paymentMethod)
                 .productName(productName)
                 .originalPrice(originalPrice)
-                .finalPrice(finalPrice)
                 .build();
+    }
+
+    public void discount(DiscountPolicy discountPolicy) {
+        this.finalPrice = discountPolicy.discount(member.getGrade(), originalPrice);
+    }
+
+    public void pay(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+        this.paidAt = LocalDateTime.now();
     }
 }
