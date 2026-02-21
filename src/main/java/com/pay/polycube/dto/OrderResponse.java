@@ -2,6 +2,7 @@ package com.pay.polycube.dto;
 
 import com.pay.polycube.domain.Order;
 import com.pay.polycube.service.PaymentMethod;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderResponse {
     PaymentMethod paymentMethod;
     LocalDateTime paidAt;

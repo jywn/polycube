@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BasicDiscountImpl implements DiscountPolicy{
 
-    // 고민 1: switch vs if
-    // 코민 2: if vs else if
     @Override
     public int discount(Grade grade, int price) {
         if (grade == Grade.VIP) {
@@ -21,7 +19,7 @@ public class BasicDiscountImpl implements DiscountPolicy{
         }
 
         if (grade == Grade.VVIP) {
-            // 고민 2: 정수 가격의 실수화
+            // 고민: 정수 가격의 실수화
             return (int) (price * 0.9);
         }
 
