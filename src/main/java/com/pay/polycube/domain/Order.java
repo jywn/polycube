@@ -39,7 +39,6 @@ public class Order {
     @Column(name = "final_price")
     private int finalPrice;
 
-    @Builder
     private Order(Member member, String productName, int originalPrice) {
         this.member = member;
         this.productName = productName;
@@ -47,11 +46,7 @@ public class Order {
     }
 
     public static Order create(Member member, String productName, int originalPrice) {
-        return Order.builder()
-                .member(member)
-                .productName(productName)
-                .originalPrice(originalPrice)
-                .build();
+        return new Order(member, productName, originalPrice);
     }
 
     public void discount(DiscountPolicy discountPolicy) {

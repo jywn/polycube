@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class OrderRequest {
     PaymentMethod paymentMethod;
     String productName;
