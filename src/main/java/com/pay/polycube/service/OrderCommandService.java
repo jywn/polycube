@@ -18,7 +18,7 @@ public class OrderCommandService {
     private final OrderRepository orderRepository;
     private final DiscountPolicy discountPolicy;
 
-    public void process(Member member, PaymentMethod paymentMethod, String productName, int originalPrice) {
+    public Order process(Member member, PaymentMethod paymentMethod, String productName, int originalPrice) {
 
         // 1. create basic order
         Order order = Order.create(member, productName, originalPrice);
@@ -29,8 +29,8 @@ public class OrderCommandService {
         // 3. pay
         order.pay(paymentMethod);
 
-        orderRepository.save(order);
-
+        // 4. save and return
+        return orderRepository.save(order);
     }
 
 
