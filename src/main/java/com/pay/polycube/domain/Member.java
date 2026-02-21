@@ -18,4 +18,12 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(name = "member_grade")
     private Grade grade;
+
+    private Member(Grade grade) {
+        this.grade = grade;
+    }
+
+    public static Member create(Grade grade) {
+        return new Member(grade);
+    }
 }
