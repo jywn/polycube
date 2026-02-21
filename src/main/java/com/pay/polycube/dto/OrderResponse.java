@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderResponse {
     PaymentMethod paymentMethod;

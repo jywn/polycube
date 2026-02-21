@@ -1,12 +1,9 @@
 package com.pay.polycube.dto;
 
 import com.pay.polycube.service.PaymentMethod;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class OrderRequest {
     PaymentMethod paymentMethod;
