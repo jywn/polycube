@@ -15,6 +15,7 @@ public class BasicDiscountImpl implements DiscountPolicy{
         if (grade == Grade.VIP) {
             if (price <= 1000) {
                 log.warn("1000원 이하인 상품은 할인 정책에서 제외합니다.");
+                return price;
             }
             return price - 1000;
         }
