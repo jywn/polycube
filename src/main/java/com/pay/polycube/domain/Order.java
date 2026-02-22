@@ -1,10 +1,8 @@
 package com.pay.polycube.domain;
 
-import com.pay.polycube.service.DiscountPolicy;
-import com.pay.polycube.service.PaymentMethod;
+import com.pay.polycube.policy.DiscountPolicy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +22,7 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 

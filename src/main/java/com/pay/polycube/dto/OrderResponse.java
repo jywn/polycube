@@ -1,14 +1,12 @@
 package com.pay.polycube.dto;
 
 import com.pay.polycube.domain.Order;
-import com.pay.polycube.service.PaymentMethod;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.pay.polycube.domain.PaymentMethod;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderResponse {
     PaymentMethod paymentMethod;

@@ -1,12 +1,20 @@
 package com.pay.polycube.dto;
 
-import com.pay.polycube.service.PaymentMethod;
+import com.pay.polycube.domain.PaymentMethod;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor
 public class OrderRequest {
-    PaymentMethod paymentMethod;
-    String productName;
-    int originalPrice;
+    @NotNull
+    private PaymentMethod paymentMethod;
+
+    @NotNull
+    private String productName;
+
+    @NotNull
+    @Positive
+    private Integer originalPrice;
 }

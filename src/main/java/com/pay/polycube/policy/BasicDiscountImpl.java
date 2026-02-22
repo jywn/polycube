@@ -1,4 +1,4 @@
-package com.pay.polycube.service;
+package com.pay.polycube.policy;
 
 import com.pay.polycube.domain.Grade;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class BasicDiscountImpl implements DiscountPolicy{
 
         if (grade == Grade.VVIP) {
             // 고민: 정수 가격의 실수화
-            return (int) (price * 0.9);
+            return price * 90 / 100;
         }
 
         return price;

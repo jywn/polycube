@@ -1,4 +1,4 @@
-package com.pay.polycube.service;
+package com.pay.polycube.policy;
 
 import com.pay.polycube.domain.Grade;
 
