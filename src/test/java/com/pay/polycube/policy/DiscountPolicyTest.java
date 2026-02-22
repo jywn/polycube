@@ -65,5 +65,4 @@ public class DiscountPolicyTest {
 
         assertThat(result).isEqualTo(13);
     }
-
 }

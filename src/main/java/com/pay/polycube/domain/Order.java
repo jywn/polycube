@@ -58,6 +58,13 @@ public class Order {
         if (this.paidAt != null) {
             throw new BusinessException(ErrorCode.PAY_TWICE);
         }
+        if (finalPrice == 0) {
+            throw new BusinessException(ErrorCode.NO_PRICE);
+        }
+
+        if (paymentMethod == PaymentMethod.POINT) {
+            finalPrice = finalPrice * 95/100;
+        }
         this.paymentMethod = paymentMethod;
         this.paidAt = LocalDateTime.now();
     }
