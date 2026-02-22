@@ -2,11 +2,9 @@ package com.pay.polycube.policy;
 
 import com.pay.polycube.domain.Grade;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-public class BasicDiscountImpl implements DiscountPolicy{
-
+public class EventDiscountImpl implements DiscountPolicy {
     @Override
     public int discount(Grade grade, int price) {
         if (grade == Grade.VIP) {
