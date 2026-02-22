@@ -7,6 +7,7 @@ import com.pay.polycube.dto.OrderRequest;
 import com.pay.polycube.dto.OrderResponse;
 import com.pay.polycube.service.OrderCommandService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class OrderController {
     private final OrderCommandService orderCommandService;
 
     @PostMapping("/order")
-    public ResponseEntity<ApiResponse<OrderResponse>> order(Member member, @Valid @RequestBody OrderRequest req) {
+    public ResponseEntity<ApiResponse<OrderResponse>> order(@Valid @NotNull Member member, @Valid @RequestBody OrderRequest req) {
 
         Order order = orderCommandService.process(member, req.getPaymentMethod(), req.getProductName(), req.getOriginalPrice());
         OrderResponse response = OrderResponse.from(order);

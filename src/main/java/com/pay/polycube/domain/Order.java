@@ -1,5 +1,7 @@
 package com.pay.polycube.domain;
 
+import com.pay.polycube.exception.BusinessException;
+import com.pay.polycube.exception.ErrorCode;
 import com.pay.polycube.policy.DiscountPolicy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -53,6 +55,9 @@ public class Order {
     }
 
     public void pay(PaymentMethod paymentMethod) {
+        if (this.paidAt != null) {
+            throw new BusinessException(ErrorCode.PAY_TWICE);
+        }
         this.paymentMethod = paymentMethod;
         this.paidAt = LocalDateTime.now();
     }

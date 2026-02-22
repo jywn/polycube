@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderResponse {
-    PaymentMethod paymentMethod;
-    LocalDateTime paidAt;
-    String productName;
-    int finalPrice;
+    private PaymentMethod paymentMethod;
+    private LocalDateTime paidAt;
+    private String productName;
+    private int finalPrice;
 
     @Builder
     private OrderResponse(PaymentMethod paymentMethod, LocalDateTime paidAt, String productName, int finalPrice) {

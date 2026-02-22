@@ -1,6 +1,7 @@
 package com.pay.polycube.dto;
 
 import com.pay.polycube.domain.PaymentMethod;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -11,7 +12,7 @@ public class OrderRequest {
     @NotNull
     private PaymentMethod paymentMethod;
 
-    @NotNull
+    @NotBlank
     private String productName;
 
     @NotNull

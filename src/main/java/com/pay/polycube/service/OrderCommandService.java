@@ -20,7 +20,6 @@ public class OrderCommandService {
     private final DiscountPolicy discountPolicy;
 
     public Order process(Member member, PaymentMethod paymentMethod, String productName, int originalPrice) {
-
         // 1. create basic order
         Order order = Order.create(member, productName, originalPrice);
 
