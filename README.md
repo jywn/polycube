@@ -92,7 +92,7 @@ feature에서는 DiscountPolicyConfig에서 정책 조합과 순서를 관리합
 
 - 파일: src/main/java/com/pay/polycube/policy/DiscountPolicyConfig.java
 - 구성:
-    - CompositeDiscountPolicy(List.of(new GradeDiscountPolicy(), new PaymentMethodDiscountPolicy()))
+  - CompositeDiscountPolicy(List.of(new GradeDiscountPolicy(), new PaymentMethodDiscountPolicy()))
 
 즉, 정책의 적용 순서를 **코드 내부의 암묵적 규칙이 아니라 설정(구성)에서 명시**했습니다.
 
@@ -113,12 +113,21 @@ feature에서는 이를 제거하여 다음처럼 책임을 분리했습니다.
 
 - 파일: src/main/java/com/pay/polycube/domain/Order.java
 - applyDiscount(String policyName, int finalPrice)
-    - policyName 기록
-    - finalPrice 기록
-    - discountPrice(할인액) 계산/저장
-    - discountRate(할인율) 계산/저장
+  - policyName 기록
+  - finalPrice 기록
+  - discountPrice(할인액) 계산/저장
+  - discountRate(할인율) 계산/저장
 
 이로써 정책이 바뀌어도 주문 자체는 “이미 결제 완료된 스냅샷 데이터”를 유지합니다.
+
+### **2-1) 테스트 전략 개선 – 순수 유닛 테스트로의 전환**
+
+기존 테스트는 OrderService를 통해 할인 정책을 간접적으로 검증하는 구조였다.
+기존 코드 구조는 Order가 DiscountPolicy를 직접 호출하여 할인 로직에 관여하였기 때문이다.
+이 방식은 실제 서비스 흐름을 검증하는 데에는 유용하지만, 할인 정책 자체의 동작과 우선순위를 독립적으로 검증하는 데에는 한계가 있었다.
+특히, 서비스 클래스는 저장소(Repository)와 정책(DiscountPolicy)을 동시에 의존하기 때문에, 테스트 실패 시 원인이 정책 로직인지, 서비스 로직인지, 혹은 저장소 연동인지 명확히 분리하기 어려웠다.
+도메인 정책 분리로 인해 순수한 유닛 테스트 작성이 용이해졌다.
+이에 따라 할인 정책의 조합과 적용 순서를 보다 명확히 검증하기 위해, 정책 객체를 직접 호출하는 순수 유닛 테스트로 구조를 개선하였다.
 
 ---
 
@@ -162,8 +171,8 @@ feature에서는 “정책이 변경/삭제되더라도 과거 주문 데이터�
 
 - 파일: src/test/java/com/pay/polycube/domain/HistoryTest.java
 - 검증 항목:
-    - grade, policy, originalPrice, finalPrice, discountPrice, paymentMethod, paidAt 등이 DB에 저장된 값으로 유지됨
-    - 이후 정책을 바꿔도(새 DiscountPolicy로 서비스 구성) 과거 주문 데이터는 변하지 않음
+  - grade, policy, originalPrice, finalPrice, discountPrice, paymentMethod, paidAt 등이 DB에 저장된 값으로 유지됨
+  - 이후 정책을 바꿔도(새 DiscountPolicy로 서비스 구성) 과거 주문 데이터는 변하지 않음
 
 이 테스트는 “정책 변경이 잦은 운영 환경”에서 데이터 정합성을 어떻게 보장하는지 보여주는 근거입니다.
 
@@ -172,8 +181,8 @@ feature에서는 “정책이 변경/삭제되더라도 과거 주문 데이터�
 ## **한계 및 향후 개선**
 
 - 현재 Member는 인증 연동 전제로 컨트롤러 파라미터로 유지되어 있으며, 실제 동작을 위해서는
-    - @AuthenticationPrincipal 적용 또는
-    - 커스텀 Argument Resolver 도입이 필요합니다.
+  - @AuthenticationPrincipal 적용 또는
+  - 커스텀 Argument Resolver 도입이 필요합니다.
 - 할인 정책의 “이름/설명/버전” 등은 향후 정책 테이블(DB) 기반으로 확장 가능하며,
 
   현재는 과제 범위 내에서 **주문 엔티티에 정책 스냅샷을 저장**하는 방식으로 요구사항을 충족했습니다.
