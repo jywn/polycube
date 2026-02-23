@@ -1,6 +1,8 @@
 package com.pay.polycube.domain;
 
-import com.pay.polycube.policy.BasicDiscountImpl;
+import com.pay.polycube.policy.CompositeDiscountPolicy;
+import com.pay.polycube.policy.DiscountPolicyConfig;
+import com.pay.polycube.policy.GradeDiscountPolicy;
 import com.pay.polycube.policy.DiscountPolicy;
 import com.pay.polycube.repository.OrderRepository;
 import com.pay.polycube.service.OrderCommandService;
@@ -14,7 +16,8 @@ import static org.mockito.Mockito.when;
 
 class OrderTest {
 
-    private final DiscountPolicy discountPolicy = new BasicDiscountImpl();
+    private final DiscountPolicyConfig discountPolicyConfig = new DiscountPolicyConfig();
+    private final DiscountPolicy discountPolicy = discountPolicyConfig.discountPolicy();
     private final OrderRepository orderRepository = mock(OrderRepository.class);
     private final OrderCommandService orderCommandService = new OrderCommandService(orderRepository, discountPolicy);
 

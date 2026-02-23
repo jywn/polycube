@@ -40,32 +40,49 @@ public class Order {
     @Column(name = "final_price")
     private int finalPrice;
 
-    private Order(Member member, String productName, int originalPrice) {
+    /**
+     * 결제 완료 주문은 적용된 할인(등급, 적용 정책명, 할인율, 할인 금액 등)을 데이터베이스에 기록
+     */
+    @Column(name = "grade")
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
+
+    @Column(name = "policy")
+    private String policy;
+
+    @Column(name = "discount_rate")
+    private int discountRate;
+
+    @Column(name = "discount_price")
+    private int discountPrice;
+
+    private Order(Member member, String productName, int originalPrice, PaymentMethod paymentMethod) {
         this.member = member;
+        this.grade = member.getGrade();
         this.productName = productName;
         this.originalPrice = originalPrice;
+        this.finalPrice = originalPrice;
+        this.paymentMethod = paymentMethod;
     }
 
-    public static Order create(Member member, String productName, int originalPrice) {
-        return new Order(member, productName, originalPrice);
+    public static Order create(Member member, String productName, int originalPrice, PaymentMethod paymentMethod) {
+        return new Order(member, productName, originalPrice, paymentMethod);
     }
 
     public void discount(DiscountPolicy discountPolicy) {
-        this.finalPrice = discountPolicy.discount(member.getGrade(), originalPrice);
+        this.policy = discountPolicy.getName();
+        this.finalPrice = discountPolicy.discount(this, this.getOriginalPrice());
+        this.discountPrice = this.originalPrice - this.finalPrice;
+        this.discountRate = 100 - this.finalPrice / this.originalPrice * 100;
     }
 
-    public void pay(PaymentMethod paymentMethod) {
+    public void pay() {
         if (this.paidAt != null) {
             throw new BusinessException(ErrorCode.PAY_TWICE);
         }
         if (finalPrice == 0) {
             throw new BusinessException(ErrorCode.NO_PRICE);
         }
-
-        if (paymentMethod == PaymentMethod.POINT) {
-            finalPrice = finalPrice * 95/100;
-        }
-        this.paymentMethod = paymentMethod;
         this.paidAt = LocalDateTime.now();
     }
 }

@@ -4,7 +4,7 @@ import com.pay.polycube.domain.Grade;
 import com.pay.polycube.domain.Member;
 import com.pay.polycube.domain.Order;
 import com.pay.polycube.domain.PaymentMethod;
-import com.pay.polycube.policy.BasicDiscountImpl;
+import com.pay.polycube.policy.GradeDiscountPolicy;
 import com.pay.polycube.policy.DiscountPolicy;
 import com.pay.polycube.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class OrderCommandServiceTest {
 
     @BeforeEach
     void setUp() {
-        discountPolicy = new BasicDiscountImpl();
+        discountPolicy = new GradeDiscountPolicy();
         orderCommandService = new OrderCommandService(orderRepository, discountPolicy);
 
         when(orderRepository.save(any(Order.class)))

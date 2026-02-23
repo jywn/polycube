@@ -21,13 +21,13 @@ public class OrderCommandService {
 
     public Order process(Member member, PaymentMethod paymentMethod, String productName, int originalPrice) {
         // 1. create basic order
-        Order order = Order.create(member, productName, originalPrice);
+        Order order = Order.create(member, productName, originalPrice, paymentMethod);
 
         // 2. apply discount
         order.discount(discountPolicy);
 
         // 3. pay
-        order.pay(paymentMethod);
+        order.pay();
 
         // 4. save and return
         return orderRepository.save(order);
