@@ -1,9 +1,9 @@
 package com.pay.polycube.domain;
 
-import com.pay.polycube.policy.CompositeDiscountPolicy;
-import com.pay.polycube.policy.DiscountPolicyConfig;
-import com.pay.polycube.policy.GradeDiscountPolicy;
+import com.pay.polycube.exception.BusinessException;
+import com.pay.polycube.exception.ErrorCode;
 import com.pay.polycube.policy.DiscountPolicy;
+import com.pay.polycube.policy.DiscountPolicyConfig;
 import com.pay.polycube.repository.OrderRepository;
 import com.pay.polycube.service.OrderCommandService;
 import org.junit.jupiter.api.DisplayName;
@@ -34,5 +34,35 @@ class OrderTest {
         Order result = orderCommandService.process(member, point, productName, originalPrice);
 
         assertThat(result.getFinalPrice()).isEqualTo(8_550);
+    }
+
+    @Test
+    @DisplayName("중복 결제 시 예외가 발생한다")
+    void throwsExceptionWhenPayTwice() {
+        Member member = Member.create(Grade.VIP);
+        Order order = Order.create(member, "product", 10_000, PaymentMethod.POINT);
+        order.discount(discountPolicy);
+        order.pay();
+
+        assertThatThrownBy(() -> order.pay())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(e -> {
+                    BusinessException be = (BusinessException) e;
+                    assertThat(be.getCode()).isEqualTo(ErrorCode.PAY_TWICE);
+                });
+    }
+
+    @Test
+    @DisplayName("결제 금액이 0원이면 예외가 발생한다")
+    void throwsExceptionWhenPriceIsZero() {
+        Member member = Member.create(Grade.VIP);
+        Order order = Order.create(member, "product", 0, PaymentMethod.POINT);
+
+        assertThatThrownBy(() -> order.pay())
+                .isInstanceOf(BusinessException.class)
+                .satisfies(e -> {
+                    BusinessException be = (BusinessException) e;
+                    assertThat(be.getCode()).isEqualTo(ErrorCode.NO_PRICE);
+                });
     }
 }
