@@ -24,7 +24,8 @@ public class OrderCommandService {
         Order order = Order.create(member, productName, originalPrice, paymentMethod);
 
         // 2. apply discount
-        order.discount(discountPolicy);
+        int discountedPrice = discountPolicy.discount(order, originalPrice);
+        order.applyDiscount(discountPolicy.getName(), discountedPrice);
 
         // 3. pay
         order.pay();

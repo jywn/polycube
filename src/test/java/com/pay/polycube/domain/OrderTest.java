@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,15 +42,11 @@ class OrderTest {
     void throwsExceptionWhenPayTwice() {
         Member member = Member.create(Grade.VIP);
         Order order = Order.create(member, "product", 10_000, PaymentMethod.POINT);
-        order.discount(discountPolicy);
+        discountPolicy.discount(order, 10_000);
         order.pay();
 
-        assertThatThrownBy(() -> order.pay())
-                .isInstanceOf(BusinessException.class)
-                .satisfies(e -> {
-                    BusinessException be = (BusinessException) e;
-                    assertThat(be.getCode()).isEqualTo(ErrorCode.PAY_TWICE);
-                });
+        BusinessException ex = assertThrows(BusinessException.class, order::pay);
+        assertThat(ex.getCode()).isEqualTo(ErrorCode.PAY_TWICE);
     }
 
     @Test
@@ -58,11 +55,7 @@ class OrderTest {
         Member member = Member.create(Grade.VIP);
         Order order = Order.create(member, "product", 0, PaymentMethod.POINT);
 
-        assertThatThrownBy(() -> order.pay())
-                .isInstanceOf(BusinessException.class)
-                .satisfies(e -> {
-                    BusinessException be = (BusinessException) e;
-                    assertThat(be.getCode()).isEqualTo(ErrorCode.NO_PRICE);
-                });
+        BusinessException ex = assertThrows(BusinessException.class, order::pay);
+        assertThat(ex.getCode()).isEqualTo(ErrorCode.NO_PRICE);
     }
 }

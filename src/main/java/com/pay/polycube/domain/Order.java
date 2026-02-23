@@ -2,7 +2,6 @@ package com.pay.polycube.domain;
 
 import com.pay.polycube.exception.BusinessException;
 import com.pay.polycube.exception.ErrorCode;
-import com.pay.polycube.policy.DiscountPolicy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -66,14 +65,19 @@ public class Order {
     }
 
     public static Order create(Member member, String productName, int originalPrice, PaymentMethod paymentMethod) {
+        if (member == null) { throw new BusinessException(ErrorCode.WRONG_MEMBER);}
         return new Order(member, productName, originalPrice, paymentMethod);
     }
 
-    public void discount(DiscountPolicy discountPolicy) {
-        this.policy = discountPolicy.getName();
-        this.finalPrice = discountPolicy.discount(this, this.getOriginalPrice());
+    public void applyDiscount(String policyName, int finalPrice) {
+        this.policy = policyName;
+        this.finalPrice = finalPrice;
         this.discountPrice = this.originalPrice - this.finalPrice;
-        this.discountRate = 100 - this.finalPrice / this.originalPrice * 100;
+        if (originalPrice <= 0) {
+            this.discountRate = 0;
+            return;
+        }
+        this.discountRate = 100 - this.finalPrice * 100 / this.originalPrice;
     }
 
     public void pay() {
